@@ -20,7 +20,7 @@ To use this package in your Dart project, add the following to your `pubspec.yam
 
 ```yaml
 dependencies:
-  pikadart: ^1.0.0
+  pikadart: ^1.1.0
 ```
 
 ## Example
@@ -49,8 +49,52 @@ dependencies:
   final berries = berriesClient.getBerryList(0, 20);
 ```
 
+## Cache Configuration
+
+### Using MemoryCacheStrategy
+
+By default, PikaDart uses an in-memory cache. You can configure the time to live of the cache entry.
+
+```dart
+final cacheStrategy = MemoryCacheStrategy(
+  ttl: Duration(days: 1)
+);
+
+final pokeapiClient = PokeapiClient(cacheStrategy: cacheStrategy);
+```
+
+### Custom Cache Implementation
+
+You can implement your own caching strategy by implementing the `CacheStrategy` interface:
+
+```dart
+class CustomCacheStrategy implements CacheStrategy {
+  @override
+  Future<T?> get<T>(String key) async {
+    // Your custom cache retrieval logic
+  }
+
+  @override
+  Future<void> set<T>(String key, T value) async {
+    // Your custom cache storage logic
+  }
+
+  @override
+  Future<void> remove(String key) async {
+    // Your custom cache remove logic
+  }
+
+  @override
+  Future<void> clear() async {
+    // Your custom cache clearing logic
+  }
+}
+
+// Using the custom cache strategy
+final customCacheStrategy = CustomCacheStrategy();
+final pokeapiClient = PokeapiClient(cacheStrategy: customCacheStrategy);
+```
+
 ## Next Steps
 
 - **Add tests**
-- **More flexible caching**
-- **More documentation**
