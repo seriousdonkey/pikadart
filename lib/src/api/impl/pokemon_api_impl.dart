@@ -4,8 +4,14 @@ import 'package:pikadart/src/api/impl/base_api.dart';
 import 'package:pikadart/src/api/models/pokemon.dart';
 import 'package:pikadart/src/api/models/resources.dart';
 import 'package:pikadart/src/api/pokemon_api.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
 
 class PokemonApiImpl extends BaseApi implements PokemonApi {
+  final CacheStrategy _cacheStrategy;
+
+  PokemonApiImpl({required super.cacheStrategy})
+      : _cacheStrategy = cacheStrategy;
+
   @override
   Future<NamedApiResourceList> fetchAbilityList(int offset, int limit) {
     return handleNamedApiResource("ability", offset, limit);
@@ -83,11 +89,20 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<Pokemon> fetchPokemonById(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/pokemon/$id"));
+    final url = "$baseUrl/pokemon/$id";
+    final cached = await _cacheStrategy.get<Pokemon>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return Pokemon.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
+      final pokemon =
+          Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, pokemon);
+
+      return pokemon;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -96,11 +111,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<Pokemon> fetchPokemonByName(String name) async {
-    final response = await http.get(Uri.parse("$baseUrl/pokemon/$name"));
+    final url = "$baseUrl/pokemon/$name";
+    final cached = await _cacheStrategy.get<Pokemon>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return Pokemon.fromJson(
-          jsonDecode(response.body) as Map<String, dynamic>);
+      final pokemon =
+          Pokemon.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, pokemon);
+      return pokemon;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -110,13 +133,20 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
   @override
   Future<List<LocationAreaEncounter>> fetchPokemonEncounterList(
       int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon/$pokemonId/encounters/"));
+    final url = "$baseUrl/pokemon/$pokemonId/encounters/";
+    final cached = await _cacheStrategy.get<List<LocationAreaEncounter>>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return (jsonDecode(response.body) as List)
+      final encounters = (jsonDecode(response.body) as List)
           .map((e) => LocationAreaEncounter.fromJson(e))
           .toList();
+      await _cacheStrategy.set(url, encounters);
+      return encounters;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -125,12 +155,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<PokemonColor> fetchPokemonColor(int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon-color/$pokemonId"));
+    final url = "$baseUrl/pokemon-color/$pokemonId";
+    final cached = await _cacheStrategy.get<PokemonColor>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return PokemonColor.fromJson(
+      final color = PokemonColor.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, color);
+      return color;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -139,12 +176,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<PokemonForm> fetchPokemonForm(int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon-form/$pokemonId"));
+    final url = "$baseUrl/pokemon-form/$pokemonId";
+    final cached = await _cacheStrategy.get<PokemonForm>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return PokemonForm.fromJson(
+      final form = PokemonForm.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, form);
+      return form;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -153,12 +197,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<PokemonHabitat> fetchPokemonHabitat(int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon-habitat/$pokemonId"));
+    final url = "$baseUrl/pokemon-habitat/$pokemonId";
+    final cached = await _cacheStrategy.get<PokemonHabitat>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return PokemonHabitat.fromJson(
+      final habitat = PokemonHabitat.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, habitat);
+      return habitat;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -167,12 +218,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<PokemonShape> fetchPokemonShape(int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon-shape/$pokemonId"));
+    final url = "$baseUrl/pokemon-shape/$pokemonId";
+    final cached = await _cacheStrategy.get<PokemonShape>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return PokemonShape.fromJson(
+      final shape = PokemonShape.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, shape);
+      return shape;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -181,12 +239,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<PokemonSpecies> fetchPokemonSpecies(int pokemonId) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/pokemon-species/$pokemonId"));
+    final url = "$baseUrl/pokemon-species/$pokemonId";
+    final cached = await _cacheStrategy.get<PokemonSpecies>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return PokemonSpecies.fromJson(
+      final species = PokemonSpecies.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, species);
+      return species;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -195,10 +260,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<Stat> fetchPokemonStat(int pokemonId) async {
-    final response = await http.get(Uri.parse("$baseUrl/stat/$pokemonId"));
+    final url = "$baseUrl/stat/$pokemonId";
+    final cached = await _cacheStrategy.get<Stat>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return Stat.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final stat =
+          Stat.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, stat);
+      return stat;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -207,10 +281,19 @@ class PokemonApiImpl extends BaseApi implements PokemonApi {
 
   @override
   Future<Type> fetchPokemonType(int pokemonId) async {
-    final response = await http.get(Uri.parse("$baseUrl/type/$pokemonId"));
+    final url = "$baseUrl/type/$pokemonId";
+    final cached = await _cacheStrategy.get<Type>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return Type.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final type =
+          Type.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, type);
+      return type;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");

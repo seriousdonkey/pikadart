@@ -1,31 +1,29 @@
-import 'package:cached_annotation/cached_annotation.dart';
 import 'package:pikadart/src/api/evolution_api.dart';
 import 'package:pikadart/src/api/impl/evolution_api_impl.dart';
 import 'package:pikadart/src/api/models/evolution.dart';
 import 'package:pikadart/src/api/models/resources.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
+import 'package:pikadart/src/cache/memory_cache_strategy.dart';
 
-part 'evolution_client.cached.dart';
+class EvolutionClient {
+  final EvolutionApi _api;
 
-@WithCache()
-abstract mixin class EvolutionClient implements _$EvolutionClient {
-  factory EvolutionClient() = _EvolutionClient;
+  EvolutionClient({
+    CacheStrategy? cacheStrategy,
+  }) : _api = EvolutionApiImpl(
+          cacheStrategy: cacheStrategy ?? MemoryCacheStrategy(),
+        );
 
-  final EvolutionApi _api = EvolutionApiImpl();
-
-  @Cached()
   Future<ApiResourceList> getEvolutionChainList(int offset, int limit) async =>
       _api.fetchEvolutionChainList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getEvolutionTriggerList(
           int offset, int limit) async =>
       _api.fetchEvolutionTriggerList(offset, limit);
 
-  @Cached()
   Future<EvolutionChain> getEvolutionChain(int id) async =>
       _api.fetchEvolutionChain(id);
 
-  @Cached()
   Future<EvolutionTrigger> getEvolutionTrigger(int id) async =>
       _api.fetchEvolutionTrigger(id);
 }

@@ -3,6 +3,8 @@ import 'package:pikadart/src/api/locations_api.dart';
 import 'package:pikadart/src/api/models/resources.dart';
 
 class LocationsApiImpl extends BaseApi implements LocationsApi {
+  LocationsApiImpl({required super.cacheStrategy});
+
   @override
   Future<NamedApiResourceList> fetchLocationList(int offset, int limit) {
     return handleNamedApiResource("location", offset, limit);

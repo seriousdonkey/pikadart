@@ -15,3 +15,5 @@ export 'src/games_client.dart';
 export 'src/items_client.dart';
 export 'src/pokeapi_client.dart';
 export 'src/pokemon_client.dart';
+export 'src/cache/cache_strategy.dart';
+export 'src/cache/memory_cache_strategy.dart';

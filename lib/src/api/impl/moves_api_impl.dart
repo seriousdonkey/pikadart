@@ -3,6 +3,8 @@ import 'package:pikadart/src/api/models/resources.dart';
 import 'package:pikadart/src/api/moves_api.dart';
 
 class MovesApiImpl extends BaseApi implements MovesApi {
+  MovesApiImpl({required super.cacheStrategy});
+
   @override
   Future<NamedApiResourceList> fetchMoveList(int offset, int limit) {
     return handleNamedApiResource("move", offset, limit);
