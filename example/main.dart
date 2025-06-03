@@ -5,7 +5,7 @@ void main() async {
   final pokeapiClient = PokeApiClient();
   // Or use a specific cache strategy
   final customPokeapiClient =
-      PokeApiClient(cacheStrategy: MemoryCacheStrategy());
+      PokeApiClient(cacheStrategy: MemoryCacheStrategy(ttl: Duration(days: 1)));
 
   // Get pikachu data
   final pikachu = await pokeapiClient.pokemon.getPokemonByName('pikachu');
