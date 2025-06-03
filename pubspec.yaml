@@ -1,5 +1,6 @@
 name: pikadart
-description: This Dart package serves as a wrapper for the PokeApi, providing a convenient and efficient way to
+description:
+  This Dart package serves as a wrapper for the PokeApi, providing a convenient and efficient way to
   interact with the Pokémon API in Dart projects. The package is designed to simplify the process of
   making API requests and includes an automatic caching mechanism to enhance performance.
 version: 1.0.1
@@ -10,8 +11,6 @@ environment:
 
 dependencies:
   http: ^1.1.2
-  cached: ^1.6.1
-  cached_annotation: ^1.6.0
 
 dev_dependencies:
   build_runner: ^2.4.6

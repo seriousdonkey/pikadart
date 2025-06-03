@@ -1,4 +1,3 @@
-import 'package:cached_annotation/cached_annotation.dart';
 import 'package:pikadart/src/api/contests_api.dart';
 import 'package:pikadart/src/api/impl/contests_api_impl.dart';
 import 'package:pikadart/src/api/models/contests.dart';

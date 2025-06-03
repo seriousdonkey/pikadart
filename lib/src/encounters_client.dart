@@ -1,4 +1,3 @@
-import 'package:cached_annotation/cached_annotation.dart';
 import 'package:pikadart/src/api/encounters_api.dart';
 import 'package:pikadart/src/api/impl/encounters_api_impl.dart';
 import 'package:pikadart/src/api/models/encounters.dart';

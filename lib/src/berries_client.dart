@@ -1,4 +1,3 @@
-import 'package:cached_annotation/cached_annotation.dart';
 import 'package:pikadart/src/api/berries_api.dart';
 import 'package:pikadart/src/api/impl/berries_api_impl.dart';
 import 'package:pikadart/src/api/models/berries.dart';
