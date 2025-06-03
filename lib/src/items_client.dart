@@ -2,35 +2,33 @@ import 'package:cached_annotation/cached_annotation.dart';
 import 'package:pikadart/src/api/impl/items_api_impl.dart';
 import 'package:pikadart/src/api/items_api.dart';
 import 'package:pikadart/src/api/models/resources.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
+import 'package:pikadart/src/cache/memory_cache_strategy.dart';
 
-part 'items_client.cached.dart';
+class ItemsClient {
+  final ItemsApi _api;
 
-@WithCache()
-abstract mixin class ItemsClient implements _$ItemsClient {
-  factory ItemsClient() = _ItemsClient;
+  ItemsClient({
+    CacheStrategy? cacheStrategy,
+  }) : _api = ItemsApiImpl(
+          cacheStrategy: cacheStrategy ?? MemoryCacheStrategy(),
+        );
 
-  final ItemsApi _api = ItemsApiImpl();
-
-  @Cached()
   Future<NamedApiResourceList> getItemList(int offset, int limit) async =>
       _api.fetchItemList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getItemAttributeList(
           int offset, int limit) async =>
       _api.fetchItemAttributeList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getItemCategoryList(
           int offset, int limit) async =>
       _api.fetchItemCategoryList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getItemFlingEffectList(
           int offset, int limit) async =>
       _api.fetchItemFlingEffectList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getItemPocketList(int offset, int limit) async =>
       _api.fetchItemPocketList(offset, limit);
 }

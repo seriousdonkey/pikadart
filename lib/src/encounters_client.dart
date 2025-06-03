@@ -3,39 +3,36 @@ import 'package:pikadart/src/api/encounters_api.dart';
 import 'package:pikadart/src/api/impl/encounters_api_impl.dart';
 import 'package:pikadart/src/api/models/encounters.dart';
 import 'package:pikadart/src/api/models/resources.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
+import 'package:pikadart/src/cache/memory_cache_strategy.dart';
 
-part 'encounters_client.cached.dart';
+class EncountersClient {
+  final EncountersApi _api;
 
-@WithCache()
-abstract mixin class EncountersClient implements _$EncountersClient {
-  factory EncountersClient() = _EncountersClient;
+  EncountersClient({
+    CacheStrategy? cacheStrategy,
+  }) : _api = EncountersApiImpl(
+          cacheStrategy: cacheStrategy ?? MemoryCacheStrategy(),
+        );
 
-  final EncountersApi _api = EncountersApiImpl();
-
-  @Cached()
   Future<NamedApiResourceList> getEncounterMethodList(
           int offset, int limit) async =>
       _api.fetchEncounterMethodList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getEncounterConditionList(
           int offset, int limit) async =>
       _api.fetchEncounterConditionList(offset, limit);
 
-  @Cached()
   Future<NamedApiResourceList> getEncounterConditionValueList(
           int offset, int limit) async =>
       _api.fetchEncounterConditionValueList(offset, limit);
 
-  @Cached()
   Future<EncounterMethod> getEncounterMethod(int id) async =>
       _api.fetchEncounterMethod(id);
 
-  @Cached()
   Future<EncounterCondition> getEncounterCondition(int id) async =>
       _api.fetchEncounterCondition(id);
 
-  @Cached()
   Future<EncounterConditionValue> getEncounterConditionValue(int id) async =>
       _api.fetchEncounterConditionValue(id);
 }

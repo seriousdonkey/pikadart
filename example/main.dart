@@ -1,10 +1,14 @@
 import 'package:pikadart/pikadart.dart';
 
-void main() {
-  // Use the general client
+void main() async {
+  // Use the general client with default memory cache strategy
   final pokeapiClient = PokeApiClient();
+  // Or use a specific cache strategy
+  final customPokeapiClient =
+      PokeApiClient(cacheStrategy: MemoryCacheStrategy());
+
   // Get pikachu data
-  final pikachu = pokeapiClient.pokemon.getPokemonByName('pikachu');
+  final pikachu = await pokeapiClient.pokemon.getPokemonByName('pikachu');
 
   // Or use a specified client
   final berriesClient = BerriesClient();

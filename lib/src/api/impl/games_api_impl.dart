@@ -3,6 +3,8 @@ import 'package:pikadart/src/api/impl/base_api.dart';
 import 'package:pikadart/src/api/models/resources.dart';
 
 class GamesApiImpl extends BaseApi implements GamesApi {
+  GamesApiImpl({required super.cacheStrategy});
+
   @override
   Future<NamedApiResourceList> fetchGenerationList(
       int offset, int limit) async {

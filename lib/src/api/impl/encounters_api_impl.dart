@@ -4,8 +4,14 @@ import 'package:pikadart/src/api/encounters_api.dart';
 import 'package:pikadart/src/api/impl/base_api.dart';
 import 'package:pikadart/src/api/models/encounters.dart';
 import 'package:pikadart/src/api/models/resources.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
 
 class EncountersApiImpl extends BaseApi implements EncountersApi {
+  final CacheStrategy _cacheStrategy;
+
+  EncountersApiImpl({required super.cacheStrategy})
+      : _cacheStrategy = cacheStrategy;
+
   @override
   Future<NamedApiResourceList> fetchEncounterMethodList(
       int offset, int limit) async {
@@ -26,11 +32,19 @@ class EncountersApiImpl extends BaseApi implements EncountersApi {
 
   @override
   Future<EncounterMethod> fetchEncounterMethod(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/encounter-method/$id"));
+    final url = "$baseUrl/encounter-method/$id";
+    final cached = await _cacheStrategy.get<EncounterMethod>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return EncounterMethod.fromJson(
+      final method = EncounterMethod.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, method);
+      return method;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -39,12 +53,19 @@ class EncountersApiImpl extends BaseApi implements EncountersApi {
 
   @override
   Future<EncounterCondition> fetchEncounterCondition(int id) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/encounter-condition/$id"));
+    final url = "$baseUrl/encounter-condition/$id";
+    final cached = await _cacheStrategy.get<EncounterCondition>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return EncounterCondition.fromJson(
+      final condition = EncounterCondition.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, condition);
+      return condition;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -53,12 +74,19 @@ class EncountersApiImpl extends BaseApi implements EncountersApi {
 
   @override
   Future<EncounterConditionValue> fetchEncounterConditionValue(int id) async {
-    final response =
-        await http.get(Uri.parse("$baseUrl/encounter-condition-value/$id"));
+    final url = "$baseUrl/encounter-condition-value/$id";
+    final cached = await _cacheStrategy.get<EncounterConditionValue>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return EncounterConditionValue.fromJson(
+      final value = EncounterConditionValue.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, value);
+      return value;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");

@@ -1,4 +1,5 @@
 import 'package:pikadart/src/berries_client.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
 import 'package:pikadart/src/contests_client.dart';
 import 'package:pikadart/src/encounters_client.dart';
 import 'package:pikadart/src/evolution_client.dart';
@@ -11,13 +12,24 @@ import 'package:pikadart/src/pokemon_client.dart';
 /// different categories of data, such as Pokémon, Berries, Contests,
 /// Encounters, Evolution, Games, and Items.
 class PokeApiClient {
-  final PokemonClient _pokemonClient = PokemonClient();
-  final BerriesClient _berriesClient = BerriesClient();
-  final ContestsClient _contestsClient = ContestsClient();
-  final EncountersClient _encountersClient = EncountersClient();
-  final EvolutionClient _evolutionClient = EvolutionClient();
-  final GamesClient _gamesClient = GamesClient();
-  final ItemsClient _itemsClient = ItemsClient();
+  final CacheStrategy? cacheStrategy;
+
+  final PokemonClient _pokemonClient;
+  final BerriesClient _berriesClient;
+  final ContestsClient _contestsClient;
+  final EncountersClient _encountersClient;
+  final EvolutionClient _evolutionClient;
+  final GamesClient _gamesClient;
+  final ItemsClient _itemsClient;
+
+  PokeApiClient({this.cacheStrategy})
+      : _pokemonClient = PokemonClient(cacheStrategy: cacheStrategy),
+        _berriesClient = BerriesClient(cacheStrategy: cacheStrategy),
+        _contestsClient = ContestsClient(cacheStrategy: cacheStrategy),
+        _encountersClient = EncountersClient(cacheStrategy: cacheStrategy),
+        _evolutionClient = EvolutionClient(cacheStrategy: cacheStrategy),
+        _gamesClient = GamesClient(cacheStrategy: cacheStrategy),
+        _itemsClient = ItemsClient(cacheStrategy: cacheStrategy);
 
   /// Returns [PokemonClient].
   PokemonClient get pokemon {

@@ -4,14 +4,29 @@ import 'package:pikadart/src/api/berries_api.dart';
 import 'package:pikadart/src/api/impl/base_api.dart';
 import 'package:pikadart/src/api/models/berries.dart';
 import 'package:pikadart/src/api/models/resources.dart';
+import 'package:pikadart/src/cache/cache_strategy.dart';
 
 class BerriesApiImpl extends BaseApi implements BerriesApi {
+  final CacheStrategy _cacheStrategy;
+
+  BerriesApiImpl({required super.cacheStrategy})
+      : _cacheStrategy = cacheStrategy;
+
   @override
   Future<Berry> fetchBerry(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/berry/$id"));
+    final url = "$baseUrl/berry/$id";
+    final cached = await _cacheStrategy.get<Berry>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return Berry.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      final berry =
+          Berry.fromJson(jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, berry);
+      return berry;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -20,11 +35,19 @@ class BerriesApiImpl extends BaseApi implements BerriesApi {
 
   @override
   Future<BerryFirmness> fetchBerryFirmness(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/berry-firmness/$id"));
+    final url = "$baseUrl/berry-firmness/$id";
+    final cached = await _cacheStrategy.get<BerryFirmness>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return BerryFirmness.fromJson(
+      final firmness = BerryFirmness.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, firmness);
+      return firmness;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");
@@ -33,11 +56,19 @@ class BerriesApiImpl extends BaseApi implements BerriesApi {
 
   @override
   Future<BerryFlavor> fetchBerryFlavor(int id) async {
-    final response = await http.get(Uri.parse("$baseUrl/berry-flavor/$id"));
+    final url = "$baseUrl/berry-flavor/$id";
+    final cached = await _cacheStrategy.get<BerryFlavor>(url);
+    if (cached != null) {
+      return cached;
+    }
+
+    final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
-      return BerryFlavor.fromJson(
+      final flavor = BerryFlavor.fromJson(
           jsonDecode(response.body) as Map<String, dynamic>);
+      await _cacheStrategy.set(url, flavor);
+      return flavor;
     } else {
       throw Exception(
           "Failed to fetch data with status code: ${response.statusCode}");

@@ -3,6 +3,8 @@ import 'package:pikadart/src/api/items_api.dart';
 import 'package:pikadart/src/api/models/resources.dart';
 
 class ItemsApiImpl extends BaseApi implements ItemsApi {
+  ItemsApiImpl({required super.cacheStrategy});
+
   @override
   Future<NamedApiResourceList> fetchItemList(int offset, int limit) {
     return handleNamedApiResource("item", offset, limit);
